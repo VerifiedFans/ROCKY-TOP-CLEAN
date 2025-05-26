@@ -1,4 +1,5 @@
-if (req.method !== 'POST') return res.status(405).end('Only POST allowed');
+
+// pages/api/manual-seed.js
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
@@ -12,13 +13,15 @@ const VIP_LAYOUT = {
 };
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).end('Only POST allowed');
+  if (req.method !== 'POST') {
+    return res.status(405).end('Only POST allowed');
+  }
 
   try {
     const event = await prisma.event.create({
       data: {
         name: "Annual Festival 2025",
-        description: "Our signature three-day festival with performances, activities, and more!",
+        description: "Three-day music festival",
         startDate: new Date("2025-06-26T10:00:00Z"),
         endDate: new Date("2025-06-28T23:00:00Z"),
       }
