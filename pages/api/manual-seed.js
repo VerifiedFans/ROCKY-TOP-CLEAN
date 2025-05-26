@@ -1,4 +1,3 @@
-
 // pages/api/manual-seed.js
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
@@ -13,9 +12,14 @@ const VIP_LAYOUT = {
 };
 
 export default async function handler(req, res) {
+  console.log("📦 manual-seed.js deployed correctly");
+
   if (req.method !== 'POST') {
+    console.log("❌ Invalid method:", req.method);
     return res.status(405).end('Only POST allowed');
   }
+
+  console.log("📨 Seeding triggered via POST");
 
   try {
     const event = await prisma.event.create({
@@ -30,7 +34,7 @@ export default async function handler(req, res) {
     const days = await Promise.all([
       prisma.eventDay.create({ data: { name: "Thursday", date: new Date("2025-06-26T10:00:00Z"), eventId: event.id } }),
       prisma.eventDay.create({ data: { name: "Friday", date: new Date("2025-06-27T10:00:00Z"), eventId: event.id } }),
-      prisma.eventDay.create({ data: { name: "Saturday", date: new Date("2025-06-28T10:00:00Z"), eventId: event.id } }),
+      prisma.eventDay.create({ data: { name: "Saturday", date: new Date("2025-06-28T10:00:00Z"), eventId: event.id } })
     ]);
 
     const vipSections = await Promise.all(
@@ -108,9 +112,9 @@ export default async function handler(req, res) {
       }
     }
 
-    res.status(200).json({ message: '✅ Seeding complete!' });
+    res.status(200).json({ message: "✅ Seeding complete!" });
   } catch (err) {
-    console.error(err);
+    console.error("❌ Error during seeding:", err);
     res.status(500).json({ error: err.message });
   } finally {
     await prisma.$disconnect();
