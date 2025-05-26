@@ -1,4 +1,3 @@
-// pages/api/seats.js
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
@@ -13,7 +12,7 @@ export default async function handler(req, res) {
             rowNumber: true,
             section: {
               select: {
-                name: true,
+                name: true
               }
             }
           }
@@ -27,7 +26,7 @@ export default async function handler(req, res) {
       available: seat.available,
       price: seat.price,
       row: seat.row.rowNumber,
-      section: seat.row.section.name,
+      section: seat.row.section.name
     }));
 
     res.status(200).json({ seats: formatted });
@@ -38,3 +37,4 @@ export default async function handler(req, res) {
     await prisma.$disconnect();
   }
 }
+
