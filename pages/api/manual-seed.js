@@ -1,4 +1,3 @@
-// pages/api/manual-seed.js
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
@@ -12,14 +11,11 @@ const VIP_LAYOUT = {
 };
 
 export default async function handler(req, res) {
-  console.log("📦 manual-seed.js deployed correctly");
+  console.log("📦 manual-seed.js deployed and received:", req.method);
 
   if (req.method !== 'POST') {
-    console.log("❌ Invalid method:", req.method);
     return res.status(405).end('Only POST allowed');
   }
-
-  console.log("📨 Seeding triggered via POST");
 
   try {
     const event = await prisma.event.create({
