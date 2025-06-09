@@ -1,3 +1,4 @@
+
 // pages/seatmap.js
 import { useEffect } from 'react';
 
@@ -9,15 +10,13 @@ export default function SeatmapPage() {
     script.onload = () => {
       if (window.Seatmap) {
         window.Seatmap.init({
-          schemaId: 5512,
           venueId: 2533,
+          schemaId: 5512,
           publicApiKey: 'a1e748e2-74a6-40c0-a3f7-7b790c68a34b',
           container: '#seatmap-container',
           lang: 'en',
-          selectable: true,
+          selectable: true
         });
-      } else {
-        console.error('Seatmap SDK failed to load.');
       }
     };
     document.body.appendChild(script);
@@ -32,6 +31,7 @@ export default function SeatmapPage() {
           width: '100%',
           height: '800px',
           border: '1px solid #ccc',
+          background: '#f9f9f9'
         }}
       />
     </div>
