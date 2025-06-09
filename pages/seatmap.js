@@ -1,26 +1,34 @@
 // pages/seatmap.js
+
 import { useEffect } from 'react';
 
 export default function SeatmapPage() {
   useEffect(() => {
     const script = document.createElement('script');
-    script.src = 'https://cdn.seatmap.pro/seamless.js';
+    script.src = 'https://cdn.seatmap.pro/build/latest/seatmap.min.js';
     script.async = true;
+
     script.onload = () => {
-      window.seatmappro.init({
+      // Mount seatmap after script is loaded
+      const seatmap = window.seatmap.mount({
+        publicApiKey: 'a1e748e2-74a6-40c0-a3f7-7b790c68a34b',
         containerId: 'seatmap-container',
-        publicApiKey: process.env.NEXT_PUBLIC_SEATMAP_API_KEY,
-        venueId: parseInt(process.env.NEXT_PUBLIC_SEATMAP_VENUE_ID),
-        schemaId: parseInt(process.env.NEXT_PUBLIC_SEATMAP_SCHEMA_ID),
+        schemaId: '5512',
+        venueId: '2533',
+        showLegend: true,
       });
     };
+
     document.body.appendChild(script);
   }, []);
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div>
       <h1>Interactive Seat Map</h1>
-      <div id="seatmap-container" style={{ width: '100%', height: '700px' }}></div>
+      <div
+        id="seatmap-container"
+        style={{ width: '100%', height: '600px', border: '1px solid #ccc' }}
+      ></div>
     </div>
   );
 }
