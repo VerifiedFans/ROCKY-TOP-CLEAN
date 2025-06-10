@@ -1,46 +1,141 @@
-// pages/seatmap.js
-import { useEffect } from 'react';
-import Head from 'next/head';
-
-export default function SeatmapPage() {
-  useEffect(() => {
-    const loadRenderer = async () => {
-      const { SeatmapBookingRenderer } = await import('@seatmap.pro/renderer');
-
-      const renderer = new SeatmapBookingRenderer({
-        container: document.getElementById('seatmap-container'),
-        onSeatSelect: (seat) => {
-          console.log('Seat selected:', seat);
-        },
-        onSchemaDataLoaded: () => {
-          console.log('Schema data loaded successfully');
-        },
-      });
-
-      const eventId = 'YOUR_EVENT_ID'; // 🔁 Replace this with your actual event ID
-      renderer.loadEvent(eventId);
-    };
-
-    loadRenderer();
-  }, []);
-
-  return (
-    <>
-      <Head>
-        <title>Interactive Seat Map</title>
-      </Head>
-      <div style={{ padding: '2rem' }}>
-        <h1>Interactive Seat Map</h1>
-        <div
-          id="seatmap-container"
-          style={{
-            width: '100%',
-            height: '800px',
-            border: '1px solid #ccc',
-            background: '#f9f9f9',
-          }}
-        />
-      </div>
-    </>
-  );
+{
+  "name": "@seatmap.pro/renderer",
+  "version": "1.47.0",
+  "description": "Seatmap renderer library for booking and admin interfaces by Seatmap.pro",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "license": "SEE LICENSE IN https://seatmap.pro/terms-of-service",
+  "type": "module",
+  "author": {
+    "name": "Andy Yusin",
+    "email": "ay@seatmap.pro",
+    "url": "https://seatmap.pro"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/seatmappro/renderer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/seatmappro/renderer/issues"
+  },
+  "homepage": "https://seatmap.pro",
+  "keywords": [
+    "seatmap",
+    "booking",
+    "renderer",
+    "typescript",
+    "react"
+  ],
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "lib"
+  ],
+  "exports": {
+    "default": "./lib/index.js"
+  },
+  "scripts": {
+    "postinstall": "npx update-browserslist-db@latest || true",
+    "prebuild": "npx update-browserslist-db@latest || true",
+    "start": "vite",
+    "build:vite": "vite build",
+    "obfuscate-booking": "javascript-obfuscator ./dist/seatmap-booking-renderer.js --output ./dist/seatmap-booking-renderer.js --self-defending true",
+    "obfuscate-admin": "javascript-obfuscator ./dist/seatmap-admin-renderer.js --output ./dist/seatmap-admin-renderer.js --self-defending true",
+    "build": "yarn build-source && yarn docs && yarn obfuscate-booking && yarn obfuscate-admin",
+    "build-source": "yarn type-check && rimraf ./dist && webpack",
+    "type-check": "tsc --noEmit",
+    "declaration": "rimraf temp && tsc --declaration --declarationDir ./temp/declaration --emitDeclarationOnly",
+    "docs": "rimraf docs && typedoc",
+    "build-lib": "tsup",
+    "build-demo-standalone": "rimraf ./dist-demo && NODE_OPTIONS=--openssl-legacy-provider webpack --config webpack.config.demo-build.js && node cleanup-demo-build.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "generate-schema": "typescript-json-schema tsconfig.json IBookingRendererSettings --out ./src/booking-renderer/schema.json"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.27.1",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-export-default-from": "^7.27.1",
+    "@babel/plugin-proposal-export-namespace-from": "^7.5.2",
+    "@babel/plugin-proposal-object-rest-spread": "^7.6.2",
+    "@babel/plugin-proposal-optional-chaining": "^7.7.5",
+    "@babel/plugin-transform-nullish-coalescing-operator": "^7.23.4",
+    "@babel/plugin-transform-runtime": "^7.27.1",
+    "@babel/preset-env": "^7.27.1",
+    "@babel/preset-react": "^7.27.1",
+    "@babel/preset-typescript": "^7.27.1",
+    "@babel/runtime": "^7.27.1",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@rjsf/core": "^6.0.0-beta.7",
+    "@rjsf/utils": "^6.0.0-beta.7",
+    "@rjsf/validator-ajv8": "^6.0.0-beta.7",
+    "@testing-library/jest-dom": "^6.4.2",
+    "@testing-library/react": "^14.2.1",
+    "@types/hammerjs": "^2.0.36",
+    "@types/jest": "^29.5.12",
+    "@types/kdbush": "^3.0.0",
+    "@types/node": "^22.15.12",
+    "@types/react": "^18.2.64",
+    "@types/react-dom": "^18.2.21",
+    "@types/stats.js": "^0.17.4",
+    "@types/throttle-debounce": "^5.0.2",
+    "@vitejs/plugin-react": "^4.2.1",
+    "babel-jest": "^29.7.0",
+    "babel-loader": "^10.0.0",
+    "canvas": "^3.1.0",
+    "concat-md": "^0.5.1",
+    "core-js": "^3.42.0",
+    "cross-env": "^7.0.3",
+    "css-loader": "^7.1.2",
+    "formik": "^2.4.6",
+    "html-loader": "^5.1.0",
+    "html-webpack-plugin": "^5.6.3",
+    "javascript-obfuscator": "^4.1.0",
+    "jest": "^29.7.0",
+    "jest-canvas-mock": "^2.5.2",
+    "jest-environment-jsdom": "^29.7.0",
+    "jest-junit": "^16.0.0",
+    "raw-loader": "^4.0.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^5.5.0",
+    "rimraf": "^6.0.1",
+    "style-loader": "^4.0.0",
+    "terser": "5.39.0",
+    "ts-jest": "^29.3.2",
+    "ts-json-schema-generator": "^2.4.0",
+    "ts-loader": "^9.5.2",
+    "tsup": "8.4.0",
+    "typedoc": "^0.28.4",
+    "typedoc-plugin-markdown": "^4.6.3",
+    "typescript": "5.8.3",
+    "typescript-json-schema": "^0.65.1",
+    "vite": "^5.2.0",
+    "vite-plugin-dts": "^3.7.3",
+    "vite-plugin-glsl": "^1.2.1",
+    "webpack": "^5.99.7",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.1"
+  },
+  "dependencies": {
+    "hammerjs": "^2.0.8",
+    "kdbush": "^4.0.2",
+    "nanoid": "^5.1.5",
+    "robot3": "^1.1.1",
+    "stats.js": "^0.17.0",
+    "throttle-debounce": "^5.0.2",
+    "whatwg-fetch": "^3.0.0"
+  },
+  "browserslist": [
+    ">0.2%",
+    "ie 11",
+    "not dead",
+    "not op_mini all"
+  ]
 }
