@@ -1,39 +1,46 @@
 // pages/seatmap.js
 import { useEffect } from 'react';
+import Head from 'next/head';
 
 export default function SeatmapPage() {
   useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'https://cdn.seatmap.pro/widget/v1/seatmap.js'; // Updated widget URL
-    script.async = true;
-    script.onload = () => {
-      if (window.Seatmap) {
-        const seatmap = new window.Seatmap({
-          publicKey: 'a1e748e2-74a6-40c0-a3f7-7b790c68a34b',
-          venueId: 2533,
-          schemaId: 5512,
-          container: '#seatmap-container',
-          lang: 'en'
-        });
+    const loadRenderer = async () => {
+      const { SeatmapBookingRenderer } = await import('@seatmap.pro/renderer');
 
-        seatmap.render();
-      }
+      const renderer = new SeatmapBookingRenderer({
+        container: document.getElementById('seatmap-container'),
+        onSeatSelect: (seat) => {
+          console.log('Seat selected:', seat);
+        },
+        onSchemaDataLoaded: () => {
+          console.log('Schema data loaded successfully');
+        },
+      });
+
+      const eventId = 'YOUR_EVENT_ID'; // 🔁 Replace this with your actual event ID
+      renderer.loadEvent(eventId);
     };
-    document.body.appendChild(script);
+
+    loadRenderer();
   }, []);
 
   return (
-    <div style={{ padding: '2rem' }}>
-      <h1>Interactive Seat Map</h1>
-      <div
-        id="seatmap-container"
-        style={{
-          width: '100%',
-          height: '800px',
-          border: '1px solid #ccc',
-          background: '#f9f9f9'
-        }}
-      />
-    </div>
+    <>
+      <Head>
+        <title>Interactive Seat Map</title>
+      </Head>
+      <div style={{ padding: '2rem' }}>
+        <h1>Interactive Seat Map</h1>
+        <div
+          id="seatmap-container"
+          style={{
+            width: '100%',
+            height: '800px',
+            border: '1px solid #ccc',
+            background: '#f9f9f9',
+          }}
+        />
+      </div>
+    </>
   );
 }
